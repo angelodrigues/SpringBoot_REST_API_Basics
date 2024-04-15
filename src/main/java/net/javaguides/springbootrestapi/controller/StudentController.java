@@ -1,5 +1,8 @@
 package net.javaguides.springbootrestapi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,5 +15,16 @@ public class StudentController {
     public Student getStudent(){
         Student student = new Student(1, "Angelo", "Barcelos");
         return student;
+    }
+
+    @GetMapping("students")
+    public List<Student> getStudents(){
+        List<Student> students = new ArrayList<>();
+        students.add(new Student(1, "Angelo", "Barcelos"));
+        students.add(new Student(2, "Yasmim", "Rodrigues"));
+        students.add(new Student(3, "Hugo", "Rodrigues"));
+        students.add(new Student(4, "Apolo", "Rodrigues"));
+
+        return students;
     }
 }
