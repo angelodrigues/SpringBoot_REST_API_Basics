@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,5 +57,28 @@ public class StudentController {
         System.out.println(student.getFirstName());
         System.out.println(student.getLastName());
         return student;
+    }
+
+    @PutMapping("students/{id}/update")
+    public Student updateStudent(@RequestBody Student student, @PathVariable int id){
+        List<Student> students = this.getStudents();
+
+        for (Student student2 : students) {
+            if(student2.getId() == id){
+                System.out.println(student2.getId());
+                System.out.println(student2.getFirstName());
+                System.out.println(student2.getLastName());
+
+                student2.setFirstName(student.getFirstName());
+                student2.setLastName(student.getLastName());
+
+                System.out.println(student2.getId());
+                System.out.println(student2.getFirstName());
+                System.out.println(student2.getLastName());
+                return student2;
+            }
+        }
+
+        return null;
     }
 }
