@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,6 +80,21 @@ public class StudentController {
             }
         }
 
+        return null;
+    }
+
+    @DeleteMapping("students/{id}/delete")
+    public List<Student> deleteStudent(@PathVariable int id) {
+        List<Student> students = this.getStudents();
+    
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            if (student.getId() == id) {
+                students.remove(i); 
+                return students;
+            }
+        }
+        
         return null;
     }
 }
