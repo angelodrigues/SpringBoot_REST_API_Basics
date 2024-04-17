@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,49 +22,59 @@ import net.javaguides.springbootrestapi.bean.Student;
 public class StudentController {
 
     @GetMapping("student")
-    public Student getStudent(){
+    public ResponseEntity<Student> getStudent(){
         Student student = new Student(1, "Angelo", "Barcelos");
-        return student;
+        //#1
+        //return ResponseEntity.ok(student);
+        //#2
+        //return new ResponseEntity<>(student, HttpStatus.OK);
+        //#3
+        return ResponseEntity.ok()
+                                .header("custom-header", "Angelo")
+                                .body(student);
     }
 
     @GetMapping("students")
-    public List<Student> getStudents(){
+    public ResponseEntity<List<Student>> getStudents(){
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "Angelo", "Barcelos"));
         students.add(new Student(2, "Yasmim", "Rodrigues"));
         students.add(new Student(3, "Hugo", "Rodrigues"));
         students.add(new Student(4, "Apolo", "Rodrigues"));
 
-        return students;
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("students/{id}/{first-name}/{last-name}")
-    public Student studentPathVariable(@PathVariable("id") int studentId, 
+    public ResponseEntity<Student> studentPathVariable(@PathVariable("id") int studentId, 
                                         @PathVariable("first-name") String first, 
                                         @PathVariable("last-name") String last){
         Student student = new Student(studentId, first, last);
-        return student;
+        return ResponseEntity.ok(student);
     }
 
     @GetMapping("students/query")
-    public Student studentRequestVariable(@RequestParam int id,
+    public ResponseEntity<Student> studentRequestVariable(@RequestParam int id,
                                             @RequestParam String firstName,
                                             @RequestParam String lastName){
-        return new Student(id, firstName, lastName);
+        Student student = new Student(id, firstName, lastName);
+        return ResponseEntity.ok(student);
     }
 
     @PostMapping("students/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Student createStudent(@RequestBody Student student){
+    public ResponseEntity<Student> createStudent(@RequestBody Student student){
         System.out.println(student.getId());
         System.out.println(student.getFirstName());
         System.out.println(student.getLastName());
-        return student;
+        //#1
+        //return new ResponseEntity<>(student, HttpStatus.CREATED);
+        //#2
+        return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
 
     @PutMapping("students/{id}/update")
-    public Student updateStudent(@RequestBody Student student, @PathVariable int id){
-        List<Student> students = this.getStudents();
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student, @PathVariable int id){
+        List<Student> students = (List<Student>) this.getStudents();
 
         for (Student student2 : students) {
             if(student2.getId() == id){
@@ -76,7 +88,7 @@ public class StudentController {
                 System.out.println(student2.getId());
                 System.out.println(student2.getFirstName());
                 System.out.println(student2.getLastName());
-                return student2;
+                return ResponseEntity.ok(student2);
             }
         }
 
@@ -84,14 +96,14 @@ public class StudentController {
     }
 
     @DeleteMapping("students/{id}/delete")
-    public List<Student> deleteStudent(@PathVariable int id) {
-        List<Student> students = this.getStudents();
+    public ResponseEntity<List<Student>> deleteStudent(@PathVariable int id) {
+        List<Student> students = (List<Student>) this.getStudents();
     
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
             if (student.getId() == id) {
                 students.remove(i); 
-                return students;
+                return ResponseEntity.ok(students);
             }
         }
         
